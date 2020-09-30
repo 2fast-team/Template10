@@ -11,6 +11,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Prism.Core.Services;
 using Windows.UI.Core.Preview;
+using Prism.Modularity;
 
 namespace Prism
 {
@@ -88,6 +89,7 @@ namespace Prism
         public Func<SplashScreen, UIElement> ExtendedSplashScreenFactory { get; set; }
 
         private IContainerExtension _containerExtension;
+        private IModuleCatalog _moduleCatalog;
         public IContainerProvider Container => _containerExtension;
 
         private void InternalInitialize()
@@ -99,19 +101,23 @@ namespace Prism
             }
 
             // dependecy injection
-            _containerExtension = CreateContainerExtension();
+            ContainerLocator.SetContainerExtension(CreateContainerExtension);
+
+            Debug.WriteLine("[App.RegisterTypes()]");
+            _containerExtension = ContainerLocator.Current;
+            _moduleCatalog = CreateModuleCatalog();
+            //RegisterRequiredTypes(_containerExtension);
+            RegisterTypes(_containerExtension);
             if (_containerExtension is IContainerRegistry registry)
             {
                 registry.RegisterSingleton<ILoggerFacade, DebugLogger>();
                 registry.RegisterSingleton<IEventAggregator, EventAggregator>();
                 RegisterInternalTypes(registry);
             }
-
-            Debug.WriteLine("[App.RegisterTypes()]");
-            RegisterTypes(_containerExtension as IContainerRegistry);
-
             Debug.WriteLine("Dependency container has just been finalized.");
             _containerExtension.FinalizeExtension();
+
+            ConfigureModuleCatalog(_moduleCatalog);
 
             // now we can start logging instead of debug/write
             _logger = Container.Resolve<ILoggerFacade>();
@@ -227,7 +233,37 @@ namespace Prism
             });
         }
 
-        public abstract IContainerExtension CreateContainerExtension();
+        /// <summary>
+        /// Creates the container used by Prism.
+        /// </summary>
+        /// <returns>The container</returns>
+        protected abstract IContainerExtension CreateContainerExtension();
+
+        /// <summary>
+        /// Creates the <see cref="IModuleCatalog"/> used by Prism.
+        /// </summary>
+        ///  <remarks>
+        /// The base implementation returns a new ModuleCatalog.
+        /// </remarks>
+        protected virtual IModuleCatalog CreateModuleCatalog()
+        {
+            return new ModuleCatalog();
+        }
+
+        /// <summary>
+        /// Initializes the modules.
+        /// </summary>
+        protected virtual void InitializeModules()
+        {
+            //IModuleManager manager = containerProvider.Resolve<IModuleManager>();
+            //manager.Run();
+        }
+
+
+        /// <summary>
+        /// Configures the <see cref="IModuleCatalog"/> used by Prism.
+        /// </summary>
+        protected virtual void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) { }
 
         protected virtual void RegisterInternalTypes(IContainerRegistry containerRegistry)
         {

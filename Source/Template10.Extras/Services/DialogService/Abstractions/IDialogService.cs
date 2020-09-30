@@ -12,6 +12,8 @@ namespace Template10.Services.Dialog
 
         Task<ContentDialogResult> ShowAsync(ContentDialog dialog, TimeSpan? timeout = null, CancellationToken? token = null);
 
+        void CancelDialogs();
+
         Task<bool> IsDialogRunning();
 
         Task<MessageBoxResult> AlertAsync(string content, IDialogResourceResolver resolver = null);

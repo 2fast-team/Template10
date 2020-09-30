@@ -20,11 +20,18 @@ namespace Prism.Modularity
         /// Raised when a module is loaded or fails to load.
         /// </summary>
         public event EventHandler<LoadModuleCompletedEventArgs> LoadModuleCompleted;
+        public event EventHandler<ModuleDownloadProgressChangedEventArgs> ModuleDownloadProgressChanged;
 
         /// <summary>
         /// The module initializer.
         /// </summary>
         protected IModuleInitializer ModuleInitializer { get; }
+
+
+        /// <summary>
+        /// Gets all the <see cref="IModuleInfo"/> classes that are in the <see cref="IModuleCatalog"/>.
+        /// </summary>
+        public IEnumerable<IModuleInfo> Modules => ModuleCatalog.Modules;
 
         /// <summary>
         /// Initializes an instance of the <see cref="ModuleManager"/> class.

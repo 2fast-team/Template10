@@ -1,11 +1,12 @@
 ﻿using Prism.Ioc;
 using Unity;
+using Unity.Extension;
 
 namespace Prism.Unity
 {
     public abstract class PrismApplication : PrismApplicationBase
     {
-        public override IContainerExtension CreateContainerExtension()
+        protected override IContainerExtension CreateContainerExtension()
         {
             return new UnityContainerExtension(new UnityContainer());
         }

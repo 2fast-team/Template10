@@ -49,7 +49,7 @@ namespace Prism.Services
         {
             window.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
             window.PointerPressed += CoreWindow_PointerPressed;
-            SystemNavigationManager.GetForCurrentView().BackRequested += GestureService_BackRequested;
+            //SystemNavigationManager.GetForCurrentView().BackRequested += GestureService_BackRequested;
             _logger = PrismApplicationBase.Current.Container.Resolve<ILoggerFacade>();
         }
 
@@ -143,7 +143,7 @@ namespace Prism.Services
         {
             window.Dispatcher.AcceleratorKeyActivated -= Dispatcher_AcceleratorKeyActivated;
             window.PointerPressed -= CoreWindow_PointerPressed;
-            SystemNavigationManager.GetForCurrentView().BackRequested -= GestureService_BackRequested;
+            //SystemNavigationManager.GetForCurrentView().BackRequested -= GestureService_BackRequested;
         }
 
         private void GestureService_BackRequested(object sender, BackRequestedEventArgs e)

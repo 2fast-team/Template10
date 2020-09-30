@@ -11,7 +11,7 @@
     <AssemblyName>Prism.Windows</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -112,6 +112,11 @@
     <Compile Include="IPrismApplicationEvents.cs" />
     <Compile Include="IResumeArgs.cs" />
     <Compile Include="IStartArgs.cs" />
+    <Compile Include="Logging\Category.cs" />
+    <Compile Include="Logging\DebugLogger.cs" />
+    <Compile Include="Logging\EmptyLogger.cs" />
+    <Compile Include="Logging\ILoggerFacade.cs" />
+    <Compile Include="Logging\Priority.cs" />
     <Compile Include="Modularity\IModuleCatalogExtensions.cs" />
     <Compile Include="Modularity\ModuleCatalog.cs" />
     <Compile Include="Modularity\ModuleInfo.cs" />
@@ -121,7 +126,6 @@
     <Compile Include="Mvvm\ViewModelLocator.cs" />
     <Compile Include="Navigation\Abstract\IConfirmNavigation.cs" />
     <Compile Include="Navigation\Abstract\IConfirmNavigationAsync.cs" />
-    <Compile Include="Navigation\Abstract\IDestructible.cs" />
     <Compile Include="Navigation\Abstract\IFrameFacade.cs" />
     <Compile Include="Navigation\Abstract\IFrameFacade2.cs" />
     <Compile Include="Navigation\Abstract\INavigatedAware.cs" />
@@ -183,7 +187,7 @@
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Prism.Core">
-      <Version>7.2.0.1422</Version>
+      <Version>8.0.0.1850-pre</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>

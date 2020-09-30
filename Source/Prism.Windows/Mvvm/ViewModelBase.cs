@@ -7,7 +7,7 @@ namespace Prism.Mvvm
     public abstract class ViewModelBase : Prism.Mvvm.BindableBase,
         IConfirmNavigation,
         IConfirmNavigationAsync,
-        Navigation.IDestructible,
+        IDestructible,
         INavigatedAware,
         INavigatedAwareAsync,
         INavigatingAware,

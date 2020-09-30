@@ -12,13 +12,14 @@ namespace Template10.Services.Dialog
     /// </summary>
     public partial class MessageBoxEx : IMessageBoxEx
     {
-        public ElementTheme RequestedTheme { get; set; } = ElementTheme.Light;
+        public ElementTheme RequestedTheme { get; set; }
 
-        public MessageBoxEx(string title, string text, MessageBoxType messageBoxType = MessageBoxType.Ok, IDialogResourceResolver resolver = null)
+        public MessageBoxEx(string title, string text, MessageBoxType messageBoxType = MessageBoxType.Ok, IDialogResourceResolver resolver = null, ElementTheme requestedTheme = ElementTheme.Light)
         {
             Text = text;
             Title = title;
             Type = messageBoxType;
+            RequestedTheme = requestedTheme;
             Resolver = resolver ?? Settings.DefaultResolver;
         }
 
