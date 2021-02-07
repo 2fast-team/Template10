@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
     public class NavigationQueue : Queue<INavigationPath>
     {

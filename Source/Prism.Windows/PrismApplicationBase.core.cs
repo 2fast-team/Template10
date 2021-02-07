@@ -61,7 +61,7 @@ namespace Prism
 
             base.Suspending += async (s, e) =>
             {
-                SuspensionUtilities.SetSuspendDate(DateTime.Now);
+                new SuspensionUtilities().SetSuspendDate(DateTime.Now);
                 var deferral = e.SuspendingOperation.GetDeferral();
                 try
                 {
@@ -105,8 +105,15 @@ namespace Prism
 
             Debug.WriteLine("[App.RegisterTypes()]");
             _containerExtension = ContainerLocator.Current;
-            _moduleCatalog = CreateModuleCatalog();
-            //RegisterRequiredTypes(_containerExtension);
+
+            //_moduleCatalog = CreateModuleCatalog();
+
+            //var regionAdapterMappins = _containerExtension.Resolve<RegionAdapterMappings>();
+            //ConfigureRegionAdapterMappings(regionAdapterMappins);
+
+            //var defaultRegionBehaviors = _containerExtension.Resolve<IRegionBehaviorFactory>();
+            //ConfigureDefaultRegionBehaviors(defaultRegionBehaviors);
+
             RegisterTypes(_containerExtension);
             if (_containerExtension is IContainerRegistry registry)
             {
@@ -166,13 +173,13 @@ namespace Prism
             try
             {
                 CallOnInitializedOnlyOnce();
-
-                if (SuspensionUtilities.IsResuming(startArgs, out var resumeArgs))
+                var suspensionUtil = new SuspensionUtilities();
+                if (suspensionUtil.IsResuming(startArgs, out var resumeArgs))
                 {
                     startArgs.StartKind = StartKinds.ResumeFromTerminate;
                     startArgs.Arguments = resumeArgs;
                 }
-                SuspensionUtilities.ClearSuspendDate();
+                suspensionUtil.ClearSuspendDate();
 
                 _logger.Log($"[App.OnStart(startKind:{startArgs.StartKind}, startCause:{startArgs.StartCause})]", Category.Info, Priority.None);
                 OnStart(startArgs);
@@ -245,10 +252,10 @@ namespace Prism
         ///  <remarks>
         /// The base implementation returns a new ModuleCatalog.
         /// </remarks>
-        protected virtual IModuleCatalog CreateModuleCatalog()
-        {
-            return new ModuleCatalog();
-        }
+        //protected virtual IModuleCatalog CreateModuleCatalog()
+        //{
+        //    return new ModuleCatalog();
+        //}
 
         /// <summary>
         /// Initializes the modules.

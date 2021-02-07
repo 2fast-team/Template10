@@ -1,4 +1,4 @@
-﻿namespace Template10.Navigation
+﻿namespace Prism.Navigation
 {
     /// <summary>
     /// The NavigationMode provides information about the navigation operation that has been invoked.

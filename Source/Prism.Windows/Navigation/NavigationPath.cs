@@ -2,7 +2,7 @@
 using System.Linq;
 using Windows.Foundation;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
     public class NavigationPath : INavigationPath
     {
@@ -51,7 +51,7 @@ namespace Template10.Navigation
 
             // get types
 
-            if (PageRegistry.TryGetRegistration(Key, out var info))
+            if (PageNavigationRegistry.TryGetRegistration(Key, out var info))
             {
                 Key = info.Key;
                 View = info.View;

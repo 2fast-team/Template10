@@ -1,113 +1,49 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using Prism.Common;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
-    public class NavigationParameters : INavigationParameters, INavigationParametersInternal
+    /// <summary>
+    /// Represents Navigation parameters.
+    /// </summary>
+    /// <remarks>
+    /// This class can be used to to pass object parameters during Navigation. 
+    /// </remarks>
+    public class NavigationParameters : ParametersBase, INavigationParameters, INavigationParametersInternal
     {
+        private readonly Dictionary<string, object> _internalParameters = new Dictionary<string, object>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NavigationParameters"/> class.
+        /// </summary>
         public NavigationParameters()
         {
-            // empty
         }
 
-        public NavigationParameters(params (string Name, object Value)[] parameters)
-            : this()
-        {
-            foreach (var (Name, Value) in parameters)
-            {
-                _external.Add(Name, Value);
-            }
-        }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NavigationParameters"/> class with a query string.
+        /// </summary>
+        /// <param name="query">The query string.</param>
         public NavigationParameters(string query)
-            : this(string.IsNullOrWhiteSpace(query) ? Array.Empty<(string key, object value)>() : new Windows.Foundation.WwwFormUrlDecoder(query).Select(x => (x.Name, (object)x.Value)).ToArray())
+            : base(query)
         {
-            // empty
         }
 
-        public override string ToString()
-        {
-            var i = string.Join(",", _internal.Select(x => $"({x.Key}:{x.Value})"));
-            var e = string.Join(",", _external.Select(x => $"({x.Key}:{x.Value})"));
-            return $"{{internal:{i} external:{e}}}";
-        }
-
-        private readonly Dictionary<string, object> _external = new Dictionary<string, object>();
-        internal Dictionary<string, object> _internal = new Dictionary<string, object>();
-
-        public object this[string key]
-             => _external[key];
-
-        public int Count
-            => _external.Count;
-
-        public IEnumerable<string> Keys
-            => _external.Keys;
-
-        public void Add(string key, object value)
-            => _external.Add(key, value);
-
-        public bool ContainsKey(string key)
-            => _external.ContainsKey(key);
-
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
-            => _external.GetEnumerator();
-
-        public T GetValue<T>(string key)
-        {
-            return (T)Convert.ChangeType(_external[key], typeof(T));
-        }
-
-        public IEnumerable<T> GetValues<T>(string key)
-            => _external.Where(x => x.Key == key).Select(x => (T)x.Value);
-
-        public bool TryGetValue<T>(string key, out T value)
-        {
-            try
-            {
-                value = (T)Convert.ChangeType(_external[key], typeof(T));
-                return true;
-            }
-            catch
-            {
-                value = default(T);
-                return false;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => _external.GetEnumerator();
-
-        // internal
-
+        #region INavigationParametersInternal
         void INavigationParametersInternal.Add(string key, object value)
-            => _internal.Add(key, value);
+        {
+            _internalParameters.Add(key, value);
+        }
 
         bool INavigationParametersInternal.ContainsKey(string key)
-            => _internal.ContainsKey(key);
+        {
+            return _internalParameters.ContainsKey(key);
+        }
 
         T INavigationParametersInternal.GetValue<T>(string key)
         {
-            try
-            {
-                if (_internal.TryGetValue(key, out var result))
-                {
-                    if (result is T resultAsT)
-                    {
-                        return resultAsT;
-                    }
-
-                    return (T)Convert.ChangeType(result, typeof(T));
-                }
-            }
-            catch
-            {
-                // ignore and return default
-            }
-
-            return default(T);
+            return _internalParameters.GetValue<T>(key);
         }
+        #endregion
     }
 }

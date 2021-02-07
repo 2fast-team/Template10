@@ -1,16 +1,15 @@
 ﻿using System.Threading.Tasks;
 using Prism.Navigation;
-using Template10.Navigation;
 
 namespace Prism.Mvvm
 {
-    public abstract class ViewModelBase : Prism.Mvvm.BindableBase,
+    public abstract class ViewModelBase : BindableBase,
         IConfirmNavigation,
         IConfirmNavigationAsync,
         IDestructible,
         INavigatedAware,
-        INavigatedAwareAsync,
-        INavigatingAware,
+        IInitialize,
+        IInitializeAsync,
         INavigatingAwareAsync
     {
         public INavigationService NavigationService { get; internal set; }
@@ -26,6 +25,13 @@ namespace Prism.Mvvm
         }
 
         public virtual void Destroy() { /* empty */ }
+
+        public virtual void Initialize(INavigationParameters parameters) { /* empty */ }
+
+        public virtual Task InitializeAsync(INavigationParameters parameters)
+        {
+            return Task.CompletedTask;
+        }
 
         public virtual void OnNavigatedFrom(INavigationParameters parameters) { /* empty */ }
 

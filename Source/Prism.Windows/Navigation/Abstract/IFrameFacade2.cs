@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
     public interface IFrameFacade2
     {

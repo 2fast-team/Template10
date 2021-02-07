@@ -1,5 +1,5 @@
-﻿using System;
-using Template10.Navigation;
+﻿using Prism.Navigation;
+using System;
 using Windows.UI.Xaml.Controls;
 
 namespace Prism.Ioc

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Prism.Properties;
+using Prism.Windows.Properties;
 
 namespace Prism.Modularity
 {

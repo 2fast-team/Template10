@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
     public interface INavigationPath
     {

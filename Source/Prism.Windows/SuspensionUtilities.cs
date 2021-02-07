@@ -4,9 +4,9 @@ using Windows.Storage;
 
 namespace Prism
 {
-    public static class SuspensionUtilities
+    public class SuspensionUtilities
     {
-        internal static bool IsResuming(StartArgs startArgs, out ResumeArgs resumeArgs)
+        public virtual bool IsResuming(StartArgs startArgs, out ResumeArgs resumeArgs)
         {
             if (WasTerminated() && WasSuspended())
             {
@@ -32,12 +32,12 @@ namespace Prism
             }
         }
 
-        internal static void ClearSuspendDate()
+        public virtual void ClearSuspendDate()
         {
             ApplicationData.Current.LocalSettings.Values.Remove("Suspend_Data");
         }
 
-        internal static DateTime? GetSuspendDate()
+        public virtual DateTime? GetSuspendDate()
         {
             if (ApplicationData.Current.LocalSettings.Values.TryGetValue("Suspend_Data", out var value)
                 && value != null
@@ -51,7 +51,7 @@ namespace Prism
             }
         }
 
-        internal static void SetSuspendDate(DateTime value)
+        public virtual void SetSuspendDate(DateTime value)
         {
             ApplicationData.Current.LocalSettings.Values["Suspend_Data"] = value.ToString();
         }

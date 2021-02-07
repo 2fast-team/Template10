@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Controls;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
     public static class NavigationFactory
     {

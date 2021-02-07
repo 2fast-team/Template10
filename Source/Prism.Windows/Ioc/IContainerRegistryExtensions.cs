@@ -1,7 +1,7 @@
 ﻿using System;
 using Prism.Ioc;
 using Prism.Mvvm;
-using Template10.Navigation;
+using Prism.Navigation;
 
 namespace Prism.Ioc
 {
@@ -14,7 +14,7 @@ namespace Prism.Ioc
                 container.Register(viewModel);
                 ViewModelLocationProvider.Register(view.ToString(), viewModel);
             }
-            PageRegistry.Register(key, (view, viewModel));
+            PageNavigationRegistry.Register(key, (view, viewModel));
         }
 
         public static void RegisterView<TView, TViewModel>(this IContainerRegistry registry)

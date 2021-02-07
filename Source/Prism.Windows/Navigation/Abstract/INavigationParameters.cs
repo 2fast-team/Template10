@@ -1,24 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Prism.Common;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
-    public interface INavigationParameters : IEnumerable<KeyValuePair<string, object>>
+    /// <summary>
+    /// Provides a way for the <see cref="INavigationService"/> to pass parameters during navigation.
+    /// </summary>
+    public interface INavigationParameters : IParameters
     {
-        void Add(string key, object value);
-
-        bool ContainsKey(string key);
-
-        int Count { get; }
-
-        IEnumerable<string> Keys { get; }
-
-        T GetValue<T>(string key);
-
-        IEnumerable<T> GetValues<T>(string key);
-
-        bool TryGetValue<T>(string key, out T value);
-
-        //legacy
-        object this[string key] { get; }
     }
 }

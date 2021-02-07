@@ -1,4 +1,4 @@
-﻿namespace Template10.Navigation
+﻿namespace Prism.Navigation
 {
     public interface INavigationService2
     {

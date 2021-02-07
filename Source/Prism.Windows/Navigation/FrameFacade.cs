@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
     public class FrameFacade : IFrameFacade, IFrameFacade2
     {
@@ -273,7 +273,7 @@ namespace Template10.Navigation
             var new_vm = new_page?.DataContext;
             if (new_vm is null)
             {
-                if (Prism.Mvvm.ViewModelLocator.GetAutowireViewModel(new_page) is null)
+                if (ViewModelLocator.GetAutowireViewModel(new_page) is null)
                 {
                     // developer didn't set autowire, and did't set datacontext manually
                     _logger.Log("No view-model is set for target page, we will attempt to find view-model declared using RegisterForNavigation<P, VM>().", Category.Info, Priority.None);
@@ -295,8 +295,8 @@ namespace Template10.Navigation
             else
             {
                 SetNavigationServiceOnVm(new_vm);
-                OnNavigatingTo(parameters, new_vm);
-                await OnNavigatedToAsync(parameters, new_vm);
+                Initialize(parameters, new_vm);
+                await InitializeAsync(parameters, new_vm);
                 OnNavigatedTo(parameters, new_vm);
             }
 
@@ -383,39 +383,39 @@ namespace Template10.Navigation
             }
         }
 
-        private void OnNavigatingTo(INavigationParameters parameters, object vm)
+        private void Initialize(INavigationParameters parameters, object vm)
         {
             if (_logStartingEvents)
             {
-                _logger.Log($"STARTING {nameof(OnNavigatingTo)} parameters:{parameters}", Category.Info, Priority.None);
+                _logger.Log($"STARTING {nameof(Initialize)} parameters:{parameters}", Category.Info, Priority.None);
             }
 
-            if (vm is INavigatingAware new_vm_ing)
+            if (vm is IInitialize new_vm_ing)
             {
-                new_vm_ing.OnNavigatingTo(parameters);
-                _logger.Log($"{nameof(INavigatingAware)}.OnNavigatingTo() called.", Category.Info, Priority.None);
+                new_vm_ing.Initialize(parameters);
+                _logger.Log($"{nameof(IInitialize)}.Initialize() called.", Category.Info, Priority.None);
             }
             else
             {
-                _logger.Log($"{nameof(INavigatingAware)} not implemented; this is okay; we'll move on to next step in FrameFacade orchestration.", Category.Info, Priority.None);
+                _logger.Log($"{nameof(IInitialize)} not implemented; this is okay; we'll move on to next step in FrameFacade orchestration.", Category.Info, Priority.None);
             }
         }
 
-        private async Task OnNavigatedToAsync(INavigationParameters parameters, object vm)
+        private async Task InitializeAsync(INavigationParameters parameters, object vm)
         {
             if (_logStartingEvents)
             {
-                _logger.Log($"STARTING {nameof(OnNavigatedToAsync)} parameters:{parameters}", Category.Info, Priority.None);
+                _logger.Log($"STARTING {nameof(Initialize)} parameters:{parameters}", Category.Info, Priority.None);
             }
 
-            if (vm is INavigatedAwareAsync new_vm_ed)
+            if (vm is IInitializeAsync new_vm_ing)
             {
-                await new_vm_ed.OnNavigatedToAsync(parameters);
-                _logger.Log($"{nameof(INavigatedAwareAsync)}.OnNavigatedToAsync() called.", Category.Info, Priority.None);
+                await new_vm_ing.InitializeAsync(parameters);
+                _logger.Log($"{nameof(IInitializeAsync)}.IInitializeAsync() called.", Category.Info, Priority.None);
             }
             else
             {
-                _logger.Log($"{nameof(INavigatedAwareAsync)} not implemented; this is okay; we'll move on to next step in FrameFacade orchestration.", Category.Info, Priority.None);
+                _logger.Log($"{nameof(IInitializeAsync)} not implemented; this is okay; we'll move on to next step in FrameFacade orchestration.", Category.Info, Priority.None);
             }
         }
 

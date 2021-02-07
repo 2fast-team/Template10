@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
     /// <summary>
     /// Provides a way for ViewModels involved in navigation to be notified of navigation activities prior to the target Page being added to the navigation stack.

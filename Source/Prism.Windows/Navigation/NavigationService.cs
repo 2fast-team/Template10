@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Prism;
+using Prism.Common;
 using Prism.Ioc;
 using Prism.Logging;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
     public class NavigationService : INavigationService, INavigationService2
     {
@@ -33,7 +33,7 @@ namespace Template10.Navigation
         public async Task RefreshAsync()
             => await _frame.RefreshAsync();
 
-        // go forward
+        #region GoForward
 
         public event EventHandler CanGoForwardChanged;
 
@@ -42,7 +42,7 @@ namespace Template10.Navigation
 
         public async Task<INavigationResult> GoForwardAsync()
             => await GoForwardAsync(
-                parameters: default(INavigationParameters));
+                parameters: default);
 
         public async Task<INavigationResult> GoForwardAsync(INavigationParameters parameters)
         {
@@ -55,23 +55,33 @@ namespace Template10.Navigation
             return await _frame.GoForwardAsync(
                   parameters: parameters);
         }
+        #endregion
 
-        // go back
+        #region GoBack
 
         public event EventHandler CanGoBackChanged;
 
         public bool CanGoBack()
             => _frame.CanGoBack();
 
+        /// <summary>
+        /// Navigates to the most recent entry in the back navigation history by popping the calling Page off the navigation stack.
+        /// </summary>
+        /// <returns>If <c>true</c> a go back operation was successful. If <c>false</c> the go back operation failed.</returns>
         public async Task<INavigationResult> GoBackAsync()
             => await GoBackAsync(
-                parameters: default(INavigationParameters),
-                infoOverride: default(NavigationTransitionInfo));
+                parameters: default,
+                infoOverride: default);
 
+        /// <summary>
+        /// Navigates to the most recent entry in the back navigation history by popping the calling Page off the navigation stack.
+        /// </summary>
+        /// <param name="parameters">The navigation parameters</param>
+        /// <returns>If <c>true</c> a go back operation was successful. If <c>false</c> the go back operation failed.</returns>
         public async Task<INavigationResult> GoBackAsync(INavigationParameters parameters)
             => await GoBackAsync(
                 parameters: parameters,
-                infoOverride: default(NavigationTransitionInfo));
+                infoOverride: default);
 
         public async Task<INavigationResult> GoBackAsync(INavigationParameters parameters = null, NavigationTransitionInfo infoOverride = null)
         {
@@ -92,49 +102,88 @@ namespace Template10.Navigation
                     parameters: parameters,
                     infoOverride: infoOverride);
         }
+        #endregion
 
-        // navigate(string)
+        #region Navigate(string)
 
         public async Task<INavigationResult> NavigateAsync(string path)
             => await NavigateAsync(
                 uri: new Uri(path, UriKind.RelativeOrAbsolute),
-                parameter: default(INavigationParameters),
-                infoOverride: default(NavigationTransitionInfo));
+                parameters: default(INavigationParameters),
+                infoOverride: default);
 
         public async Task<INavigationResult> NavigateAsync(string path, INavigationParameters parameters)
             => await NavigateAsync(
                 uri: new Uri(path, UriKind.RelativeOrAbsolute),
-                parameter: parameters,
-                infoOverride: default(NavigationTransitionInfo));
+                parameters: parameters,
+                infoOverride: default);
+
+        public async Task<INavigationResult> NavigateAsync(string path, params (string Key, object Value)[] parameters)
+            => await NavigateAsync(
+                uri: new Uri(path, UriKind.RelativeOrAbsolute),
+                parameters: parameters,
+                infoOverride: default);
 
         public async Task<INavigationResult> NavigateAsync(string path, INavigationParameters parameter, NavigationTransitionInfo infoOverride)
             => await NavigateAsync(
                 uri: new Uri(path, UriKind.RelativeOrAbsolute),
-                parameter: parameter,
+                parameters: parameter,
                 infoOverride: infoOverride);
+        #endregion
 
-        // navigate(uri)
+        #region Navigate(Uri)
 
         public async Task<INavigationResult> NavigateAsync(Uri uri)
             => await NavigateAsync(
                 uri: uri,
-                parameter: default(INavigationParameters),
-                infoOverride: default(NavigationTransitionInfo));
+                parameters: default(INavigationParameters),
+                infoOverride: default);
 
         public async Task<INavigationResult> NavigateAsync(Uri uri, INavigationParameters parameters)
             => await NavigateAsync(
                 uri: uri,
-                parameter: parameters,
-                infoOverride: default(NavigationTransitionInfo));
+                parameters: parameters,
+                infoOverride: default);
 
-        public async Task<INavigationResult> NavigateAsync(Uri uri, INavigationParameters parameter, NavigationTransitionInfo infoOverride)
+        /// <summary>
+        /// Initiates navigation to the target specified by the <paramref name="uri"/>.
+        /// </summary>
+        /// <param name="uri">The Uri to navigate to</param>
+        /// <param name="parameters">The navigation parameters</param>
+        /// <param name="infoOverride">The transition info</param>
+        /// <returns><see cref="INavigationResult"/> indicating whether the request was successful or if there was an encountered <see cref="Exception"/>.</returns>
+        /// <remarks>Navigation parameters can be provided in the Uri and by using the <paramref name="parameters"/>.</remarks>
+        /// <example>
+        /// NavigateAsync(new Uri("MainPage?id=3&amp;name=dan", UriKind.RelativeSource), ("person", person), ("foo", bar));
+        /// </example>
+        public async Task<INavigationResult> NavigateAsync(Uri uri, NavigationTransitionInfo infoOverride, params (string Key, object Value)[] parameters)
         {
-            _logger.Log($"{nameof(NavigationService)}.{nameof(NavigateAsync)}(uri:{uri} parameter:{parameter} info:{infoOverride})", Category.Info, Priority.None);
+            _logger.Log($"{nameof(NavigationService)}.{nameof(NavigateAsync)}(uri:{uri} parameter:{parameters} info:{infoOverride})", Category.Info, Priority.None);
+            return await NavigateAsync(
+                uri: uri,
+                parameters: GetNavigationParameters(parameters),
+                infoOverride: default);
+        }
+
+        public async Task<INavigationResult> NavigateAsync(Uri uri, INavigationParameters parameters, NavigationTransitionInfo infoOverride)
+        {
+            _logger.Log($"{nameof(NavigationService)}.{nameof(NavigateAsync)}(uri:{uri} parameter:{parameters} info:{infoOverride})", Category.Info, Priority.None);
 
             return await _frame.NavigateAsync(
                 uri: uri,
-                parameter: parameter,
+                parameter: parameters,
                 infoOverride: infoOverride);
+        }
+        #endregion
+
+        private static INavigationParameters GetNavigationParameters((string Key, object Value)[] parameters)
+        {
+            var navParams = new NavigationParameters();
+            foreach (var (Key, Value) in parameters)
+            {
+                navParams.Add(Key, Value);
+            }
+            return navParams;
         }
     }
 }

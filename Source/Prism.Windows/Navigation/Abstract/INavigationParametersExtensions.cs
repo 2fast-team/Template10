@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading;
 
-namespace Template10.Navigation
+namespace Prism.Navigation
 {
     public static class INavigationParametersExtensions
     {
@@ -42,10 +42,10 @@ namespace Template10.Navigation
             return (parameters as INavigationParametersInternal).GetValue<NavigationMode>(nameof(NavigationMode));
         }
 
-        public static INavigationService GetNavigationService(this Windows.UI.Xaml.Controls.Frame frame)
-        {
-            return NavigationService.Instances.Single(x => x.Value.GetXamlFrame() == frame).Value;
-        }
+        //public static INavigationService GetNavigationService(this Windows.UI.Xaml.Controls.Frame frame)
+        //{
+        //    return NavigationService.Instances.Single(x => x.Value.GetXamlFrame() == frame).Value;
+        //}
 
         public static INavigationService GetNavigationService(this INavigationParameters parameters)
         {
