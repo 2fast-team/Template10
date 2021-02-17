@@ -1,9 +1,9 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
-
   <PropertyGroup>
-    <TargetFramework>uap10.0.17763</TargetFramework>
+    <TargetFramework>uap10.0.19041</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <LangVersion>9.0</LangVersion>
-    <Title>Prism.Unity Windows</Title>
+    <Title>Prism Unity Windows</Title>
     <UseWindowsDesktopSdk>true</UseWindowsDesktopSdk>
       <Platforms>x86;x64;ARM;ARM64</Platforms>
   </PropertyGroup>
