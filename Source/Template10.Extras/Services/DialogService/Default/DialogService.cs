@@ -63,7 +63,12 @@ namespace Template10.Services.Dialog
 
         public async Task<IUICommand> ShowAsync(MessageDialog dialog, TimeSpan? timeout = null, CancellationToken? token = null)
         {
-            return await DialogManager.OneAtATimeAsync(async () => await dialog.ShowAsync(), timeout, token);
+            if (_tokenSource is null)
+            {
+                _tokenSource = new CancellationTokenSource();
+            }
+            var tk = token ?? _tokenSource.Token;
+            return await DialogManager.OneAtATimeAsync(async () => await dialog.ShowAsync().AsTask(tk), timeout, tk);
         }
     }
 }

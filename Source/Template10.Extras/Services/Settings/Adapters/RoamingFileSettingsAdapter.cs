@@ -1,9 +1,7 @@
 ﻿using System;
-using Template10.Extensions;
-using Prism.Ioc;
 using Template10.Services.File;
 using Template10.Services.Serialization;
-using Prism;
+using Template10.Services.Compression;
 
 namespace Template10.Services.Settings
 {
@@ -11,19 +9,16 @@ namespace Template10.Services.Settings
     {
         private readonly IFileService _helper;
 
-        public RoamingFileSettingsAdapter()
-          : this(PrismApplicationBase.Current.Container.Resolve<ISerializationService>())
+        public RoamingFileSettingsAdapter(ISerializationService serializationService, ICompressionService compressionService)
         {
-            // empty
-        }
-
-        public RoamingFileSettingsAdapter(ISerializationService serializationService)
-        {
-            _helper = new File.FileService(serializationService);
+            _helper = new FileService(serializationService);
             SerializationService = serializationService;
+            CompressionService = compressionService;
         }
 
         public ISerializationService SerializationService { get; }
+
+        public ICompressionService CompressionService { get; }
 
         public RoamingFileSettingsAdapter(IFileService fileService)
         {

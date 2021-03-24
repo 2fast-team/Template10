@@ -1,6 +1,4 @@
-﻿using System;
-using Prism.Ioc;
-using Prism;
+﻿using Template10.Services.Compression;
 using Template10.Services.Serialization;
 using Windows.Storage;
 
@@ -10,19 +8,16 @@ namespace Template10.Services.Settings
     {
         private ApplicationDataContainer _container;
 
-        public LocalSettingsAdapter()
-          : this(PrismApplicationBase.Current.Container.Resolve<ISerializationService>())
-        {
-            // empty
-        }
-
-        public LocalSettingsAdapter(ISerializationService serializationService)
+        public LocalSettingsAdapter(ISerializationService serializationService, ICompressionService compressionService)
         {
             _container = ApplicationData.Current.LocalSettings;
             SerializationService = serializationService;
+            CompressionService = compressionService;
         }
 
         public ISerializationService SerializationService { get; }
+
+        public ICompressionService CompressionService { get; }
 
         public (bool successful, string result) ReadString(string key)
         {

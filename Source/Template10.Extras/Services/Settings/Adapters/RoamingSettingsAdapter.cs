@@ -1,8 +1,7 @@
 ﻿using System;
 using Template10.Services.Serialization;
-using Prism.Ioc;
 using Windows.Storage;
-using Prism;
+using Template10.Services.Compression;
 
 namespace Template10.Services.Settings
 {
@@ -10,19 +9,16 @@ namespace Template10.Services.Settings
     {
         private ApplicationDataContainer _container;
 
-        public RoamingSettingsAdapter()
-           : this(PrismApplicationBase.Current.Container.Resolve<ISerializationService>())
-        {
-            // empty
-        }
-
-        public RoamingSettingsAdapter(ISerializationService serializationService)
+        public RoamingSettingsAdapter(ISerializationService serializationService, ICompressionService compressionService)
         {
             _container = ApplicationData.Current.RoamingSettings;
             SerializationService = serializationService;
+            CompressionService = compressionService;
         }
 
         public ISerializationService SerializationService { get; }
+
+        public ICompressionService CompressionService { get; }
 
         public (bool successful, string result) ReadString(string key)
         {

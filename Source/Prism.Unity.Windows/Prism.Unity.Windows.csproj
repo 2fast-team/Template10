@@ -4,13 +4,16 @@
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <LangVersion>9.0</LangVersion>
     <Title>Prism Unity Windows</Title>
-    <UseWindowsDesktopSdk>true</UseWindowsDesktopSdk>
       <Platforms>x86;x64;ARM;ARM64</Platforms>
+      <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Unity.Container">
       <Version>5.11.11</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.2.12</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

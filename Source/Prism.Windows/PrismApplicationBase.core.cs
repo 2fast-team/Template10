@@ -19,7 +19,6 @@ namespace Prism
     {
         public static new PrismApplicationBase Current => (PrismApplicationBase)Application.Current;
         private static readonly SemaphoreSlim _startSemaphore = new SemaphoreSlim(1, 1);
-        public const string NavigationServiceParameterName = "navigationService";
         private readonly bool _logStartingEvents = false;
 
         public PrismApplicationBase()

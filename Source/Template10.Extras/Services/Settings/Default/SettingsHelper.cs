@@ -1,6 +1,4 @@
 ﻿using System;
-using Prism.Ioc;
-using Prism;
 using Template10.Services.Compression;
 using Template10.Services.Serialization;
 
@@ -12,16 +10,10 @@ namespace Template10.Services.Settings
         private readonly ICompressionService _compressionService;
         private readonly ISettingsAdapter _adapter;
 
-        public SettingsHelper()
-            : this(new LocalSettingsAdapter())
-        {
-            // empty
-        }
-
         public SettingsHelper(ISettingsAdapter adapter)
         {
             _adapter = adapter;
-            _compressionService = PrismApplicationBase.Current.Container.Resolve<ICompressionService>();
+            _compressionService = adapter.CompressionService;
             _serializationService = adapter.SerializationService;
         }
 
@@ -29,16 +21,16 @@ namespace Template10.Services.Settings
 
         public (bool successful, T result) Read<T>(string key)
         {
-            var resultTuple = _adapter.ReadString(key);
-            if (!resultTuple.successful)
+            var (successful, result) = _adapter.ReadString(key);
+            if (!successful)
             {
                 return (false, default(T));
             }
             if (EnableCompression)
             {
-                resultTuple.Item2 = _compressionService.Unzip(resultTuple.Item2);
+                result = _compressionService.Unzip(result);
             }
-            return (true,_serializationService.Deserialize<T>(resultTuple.Item2));
+            return (true,_serializationService.Deserialize<T>(result));
         }
 
         public T SafeRead<T>(string key, T otherwise)
@@ -70,10 +62,10 @@ namespace Template10.Services.Settings
         {
             try
             {
-                var resultTuple = Read<T>(key);
-                if (resultTuple.successful)
+                var (successful, result) = Read<T>(key);
+                if (successful)
                 {
-                    value = resultTuple.result;
+                    value = result;
                     return true;
                 }
                 else
@@ -113,15 +105,21 @@ namespace Template10.Services.Settings
 
         public string ReadString(string key)
         {
-            var resultTuple = _adapter.ReadString(key);
-            if (EnableCompression)
+            var (successful, result) = _adapter.ReadString(key);
+            if (successful)
             {
-                return _compressionService.Unzip(resultTuple.result);
+                if (EnableCompression)
+                {
+                    return _compressionService.Unzip(result);
+                }
+                else
+                {
+                    return result;
+                }
             }
-            else
-            {
-                return resultTuple.result;
-            }
+            // the result contains the exception message or is empty
+            return result;
+
         }
 
         public bool TryReadString(string key, out string value)

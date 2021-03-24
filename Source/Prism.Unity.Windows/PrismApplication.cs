@@ -1,6 +1,5 @@
 ﻿using Prism.Ioc;
 using Unity;
-using Unity.Extension;
 
 namespace Prism.Unity
 {
